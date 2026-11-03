@@ -40,13 +40,11 @@ public class UserController {
         String password=json.getPassword();
         AppUser user=repo.findByEmail(email);
         if (user==null||password==null){
-            System.out.println("failed");
             Loginreturn response=new Loginreturn();
             response.setLoginSucess(false);
             return response;
         }
         if (passwordEncoder.matches(password, user.getPassword())){
-            System.out.println("login sucessful");
             Loginreturn response=new Loginreturn();
             response.setLoginSucess(true);
             response.setEmail(user.getEmail());
@@ -54,7 +52,6 @@ public class UserController {
             response.setRiskLevel(user.getriskLevel());
             response.setTimeFrame(user.gettimeFrame());
             String token = JWTservice.generateToken(user.getEmail());
-            System.out.println(token);
             response.setToken(token);
             return response;
         }
@@ -87,10 +84,7 @@ public class UserController {
     }
     @PostMapping("/autofill")
     public List<StockDirectory> autofill(@RequestBody String text){
-        System.out.println(text);
-        System.out.println("Total stocks: " + stockrepo.count());
         List<StockDirectory> suggestions=stockrepo.findTop5ByNameStartingWithIgnoreCaseOrSymbolStartingWithIgnoreCase(text,text);
-        System.out.println("autofill sent"+suggestions);
         return suggestions;
     }
     @PostMapping("evalStock")
@@ -144,7 +138,6 @@ public class UserController {
 @PostMapping("/changesettings")
 public int changesettings(@RequestHeader(value="Authorization",required=false) String auth,@RequestBody prompt prompt){
     if(auth==null||!auth.startsWith("Bearer ")){
-        System.out.println("Settings failed: Missing token");
         return 1;
     }
     String email;
@@ -152,24 +145,18 @@ public int changesettings(@RequestHeader(value="Authorization",required=false) S
         email=JWTservice.validateToken(auth.substring(7));
     }
     catch(JwtException|IllegalArgumentException e){
-        System.out.println("Settings failed: Invalid or expired token");
         return 1;
     }
     AppUser user=repo.findByEmail(email);
     if(user==null){
-        System.out.println("Settings failed: User not found");
         return 1;
     }
 
-    System.out.println("Risk received: "+prompt.getRiskLevel());
-    System.out.println("Timeframe received: "+prompt.getTimeFrame());
 
     if(prompt.getRiskLevel()>5||prompt.getRiskLevel()<1){
-        System.out.println("Settings failed: Invalid risk");
         return 1;
     }
     if(prompt.getTimeFrame()>60||prompt.getTimeFrame()<1){
-        System.out.println("Settings failed: Invalid timeframe");
         return 1;
     }
 
@@ -179,7 +166,6 @@ public int changesettings(@RequestHeader(value="Authorization",required=false) S
         user.setUsername(prompt.getName());
     }
     repo.save(user);
-    System.out.println("Settings saved successfully");
     return 0;
 }
 
