@@ -26,9 +26,9 @@ TradeGuide is a full-stack mobile application that helps users explore publicly 
     <th>Saved evaluation details</th>
   </tr>
   <tr>
-    <td><img src="screenshots/dashboard.png" alt="TradeGuide dashboard showing evaluation history" width="240"></td>
-    <td><img src="screenshots/stock-search.png" alt="Stock search with ticker autocomplete suggestions" width="240"></td>
-    <td><img src="screenshots/evaluation-details.png" alt="Saved stock evaluation with price, projection, and analysis" width="240"></td>
+    <td><img src="screenshots/Dashboard.png" alt="TradeGuide dashboard showing evaluation history" width="240"></td>
+    <td><img src="screenshots/Autofill.png" alt="Stock search with ticker autocomplete suggestions" width="240"></td>
+    <td><img src="screenshots/DashboardHistory.png" alt="Saved stock evaluation with price, projection, and analysis" width="240"></td>
   </tr>
 </table>
 
@@ -43,9 +43,9 @@ TradeGuide is a full-stack mobile application that helps users explore publicly 
     <th>Settings</th>
   </tr>
   <tr>
-    <td><img src="screenshots/login.png" alt="TradeGuide login screen" width="240"></td>
-    <td><img src="screenshots/signup.png" alt="TradeGuide account registration screen" width="240"></td>
-    <td><img src="screenshots/settings.png" alt="TradeGuide settings for risk level, timeframe, and account" width="240"></td>
+    <td><img src="screenshots/Login.png" alt="TradeGuide login screen" width="240"></td>
+    <td><img src="screenshots/Signup.png" alt="TradeGuide account registration screen" width="240"></td>
+    <td><img src="screenshots/Settings.png" alt="TradeGuide settings for risk level, timeframe, and account" width="240"></td>
   </tr>
 </table>
 
