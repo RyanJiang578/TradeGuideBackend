@@ -3,8 +3,6 @@ package TradeGuide.AI;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.List;
-import java.util.Map;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -15,9 +13,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-
 import io.jsonwebtoken.JwtException;
-
 import org.springframework.transaction.annotation.Transactional;
     @RestController
 @CrossOrigin(origins = "http://localhost:8081")
@@ -146,10 +142,44 @@ public class UserController {
     }
 
 @PostMapping("/changesettings")
-public int changesettings(@RequestBody Map<String, Object> data) {
-    System.out.println("RAW JSON: " + data);
-    System.out.println("Risk: " + data.get("riskLevel"));
-    System.out.println("Timeframe: " + data.get("timeFrame"));
+public int changesettings(@RequestHeader(value="Authorization",required=false) String auth,@RequestBody prompt prompt){
+    if(auth==null||!auth.startsWith("Bearer ")){
+        System.out.println("Settings failed: Missing token");
+        return 1;
+    }
+    String email;
+    try{
+        email=JWTservice.validateToken(auth.substring(7));
+    }
+    catch(JwtException|IllegalArgumentException e){
+        System.out.println("Settings failed: Invalid or expired token");
+        return 1;
+    }
+    AppUser user=repo.findByEmail(email);
+    if(user==null){
+        System.out.println("Settings failed: User not found");
+        return 1;
+    }
+
+    System.out.println("Risk received: "+prompt.getRiskLevel());
+    System.out.println("Timeframe received: "+prompt.getTimeFrame());
+
+    if(prompt.getRiskLevel()>5||prompt.getRiskLevel()<1){
+        System.out.println("Settings failed: Invalid risk");
+        return 1;
+    }
+    if(prompt.getTimeFrame()>60||prompt.getTimeFrame()<1){
+        System.out.println("Settings failed: Invalid timeframe");
+        return 1;
+    }
+
+    user.setRiskLevel(prompt.getRiskLevel());
+    user.settimeFrame(prompt.getTimeFrame());
+    if(prompt.getName()!=null&&prompt.getName().length()<=30&&!prompt.getName().isEmpty()){
+        user.setUsername(prompt.getName());
+    }
+    repo.save(user);
+    System.out.println("Settings saved successfully");
     return 0;
 }
 
