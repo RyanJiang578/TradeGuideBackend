@@ -161,20 +161,20 @@ public int changesettings(@RequestHeader(value="Authorization",required=false) S
         return 1;
     }
 
-    System.out.println("Risk received: "+prompt.getRisk());
-    System.out.println("Timeframe received: "+prompt.gettimeFrame());
+    System.out.println("Risk received: "+prompt.getRiskLevel());
+    System.out.println("Timeframe received: "+prompt.getTimeFrame());
 
-    if(prompt.getRisk()>5||prompt.getRisk()<1){
+    if(prompt.getRiskLevel()>5||prompt.getRiskLevel()<1){
         System.out.println("Settings failed: Invalid risk");
         return 1;
     }
-    if(prompt.gettimeFrame()>60||prompt.gettimeFrame()<1){
+    if(prompt.getTimeFrame()>60||prompt.getTimeFrame()<1){
         System.out.println("Settings failed: Invalid timeframe");
         return 1;
     }
 
-    user.setRiskLevel(prompt.getRisk());
-    user.settimeFrame(prompt.gettimeFrame());
+    user.setRiskLevel(prompt.getRiskLevel());
+    user.settimeFrame(prompt.getTimeFrame());
     if(prompt.getName()!=null&&prompt.getName().length()<=30&&!prompt.getName().isEmpty()){
         user.setUsername(prompt.getName());
     }

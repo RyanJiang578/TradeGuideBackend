@@ -12,10 +12,10 @@ public class prompt{
     public String getName(){
         return name;
     }
-    public int getRisk(){
+    public int getRiskLevel(){
         return riskLevel;
     }
-    public int gettimeFrame(){
+    public int getTimeFrame(){
         return timeFrame;
     }
     public double  getValue(){
@@ -30,7 +30,7 @@ public class prompt{
     public void setriskLevel(int riskLevel){
         this.riskLevel=riskLevel;
     }
-    public void settimeFrame(int timeFrame){
+    public void setimeFrame(int timeFrame){
         this.timeFrame=timeFrame;
     }
     public void setValue(Double value){

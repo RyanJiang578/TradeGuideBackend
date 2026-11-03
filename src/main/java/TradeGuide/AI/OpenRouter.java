@@ -30,8 +30,8 @@ public class OpenRouter{
     userPrompt.put("role", "user");
     userPrompt.put("content",
     "Analyze the stock " + data.getName() +
-    ". The user's risk level is " + translate(data.getRisk(),"risk") +
-    " and their investment timeframe is " + translate(data.gettimeFrame(),"timeframe") + "."
+    ". The user's risk level is " + translate(data.getRiskLevel(),"risk") +
+    " and their investment timeframe is " + translate(data.getTimeFrame(),"timeframe") + "."
     );
     JSONArray messages = new JSONArray(); 
     messages.put(prompt);
