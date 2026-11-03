@@ -27,10 +27,10 @@ public class prompt{
     public void setName(String name){
         this.name=name;
     }
-    public void setriskLevel(int riskLevel){
+    public void setRiskLevel(int riskLevel){
         this.riskLevel=riskLevel;
     }
-    public void setimeFrame(int timeFrame){
+    public void setTimeFrame(int timeFrame){
         this.timeFrame=timeFrame;
     }
     public void setValue(Double value){
