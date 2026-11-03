@@ -131,7 +131,7 @@ public class UserController {
     if (reply != null && reply.getResponseCode() == 0) {
     EvaluationHistory history = new EvaluationHistory();
     history.setUser(user);
-    history.setSymbol(prompt.getName());
+    history.setSymbol(prompt.getName()); 
     history.setcurrentValue(reply.getCurrentValue());
     history.setprojectedValue(reply.getProjectedValue());
     history.setInformation(reply.getInformation());
@@ -140,37 +140,49 @@ public class UserController {
     }
     return reply;
     }
-    @PostMapping("/changesettings")
-    public int changesettings(@RequestHeader(value = "Authorization", required = false) String auth,@RequestBody prompt prompt){
-        if(auth==null||!auth.startsWith("Bearer ")){
-            return 1;
-        }
-        String token = auth.substring(7);
-        String email;
-        try {
-        email = JWTservice.validateToken(token);
-            } 
-        catch (JwtException | IllegalArgumentException e) {
-            return 1;
-        }
-        AppUser user=repo.findByEmail(email);
-        if(user==null){
-            return 1;
-        }
-        if(prompt.getRisk()>5||prompt.getRisk()<1){
-            return 1;
-        }
-        if(prompt.gettimeFrame()>60||prompt.gettimeFrame()<1){
-            return 1;
-        }
-        user.setRiskLevel(prompt.getRisk());
-        user.settimeFrame(prompt.gettimeFrame());
-        if(prompt.getName()!=null&&prompt.getName().length()<=30&&prompt.getName().isEmpty()==false){
-            user.setUsername(prompt.getName());
-        }
-        repo.save(user);
-        return 0;
+
+@PostMapping("/changesettings")
+public int changesettings(@RequestHeader(value="Authorization",required=false) String auth,@RequestBody prompt prompt){
+    if(auth==null||!auth.startsWith("Bearer ")){
+        System.out.println("Settings failed: Missing token");
+        return 1;
     }
+    String email;
+    try{
+        email=JWTservice.validateToken(auth.substring(7));
+    }
+    catch(JwtException|IllegalArgumentException e){
+        System.out.println("Settings failed: Invalid or expired token");
+        return 1;
+    }
+    AppUser user=repo.findByEmail(email);
+    if(user==null){
+        System.out.println("Settings failed: User not found");
+        return 1;
+    }
+
+    System.out.println("Risk received: "+prompt.getRisk());
+    System.out.println("Timeframe received: "+prompt.gettimeFrame());
+
+    if(prompt.getRisk()>5||prompt.getRisk()<1){
+        System.out.println("Settings failed: Invalid risk");
+        return 1;
+    }
+    if(prompt.gettimeFrame()>60||prompt.gettimeFrame()<1){
+        System.out.println("Settings failed: Invalid timeframe");
+        return 1;
+    }
+
+    user.setRiskLevel(prompt.getRisk());
+    user.settimeFrame(prompt.gettimeFrame());
+    if(prompt.getName()!=null&&prompt.getName().length()<=30&&!prompt.getName().isEmpty()){
+        user.setUsername(prompt.getName());
+    }
+    repo.save(user);
+    System.out.println("Settings saved successfully");
+    return 0;
+}
+
 @GetMapping("/loadHistory")
 public ResponseEntity<List<HistoryResponse>> loadHistory(@RequestHeader(value = "Authorization",required = false) String auth){
     if (auth == null || !auth.startsWith("Bearer ")) {
