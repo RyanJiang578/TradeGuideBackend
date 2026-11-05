@@ -32,17 +32,22 @@ TradeGuide is a full-stack mobile application that helps users explore publicly 
   </tr>
 </table>
 
+
 ### AI-powered stock evaluation
 
-<p align="center">
-  <img src="screenshots/Eval.png"
-       alt="TradeGuide AI-generated stock evaluation showing current price, projected value, and analysis"
-       width="280">
-</p>
+<table>
+  <tr>
+    <th>AI stock analysis</th>
+  </tr>
+  <tr>
+    <td align="center">
+      <img src="screenshots/Eval.png"
+           alt="TradeGuide AI-generated stock evaluation showing current price, projected value, and analysis"
+           width="240">
+    </td>
+  </tr>
+</table>
 
-<p align="center">
-  <em>Personalized AI stock evaluation based on the user's risk tolerance and investment timeframe.</em>
-</p>
 
 ### Accounts and preferences
 
