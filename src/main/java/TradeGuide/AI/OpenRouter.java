@@ -21,7 +21,7 @@ public class OpenRouter{
         "Analyze stocks based on the user's risk level and investment timeframe. " +
         "Return valid JSON only with exactly these fields: " +
         "currentValue, projectedValue, information." +
-        "currentValue will be provided, projectedValue is the value you believe the stock will hit in the specified timeframe "+
+        "currentValue will be provided, projectedValue is the value you believe the stock will hit in the specified timeframe for currentValue use only the provided currentValue"+
         "information is for relevant information including: recent activity, price drops, and future plans."+
         "If there is reason to believe so you can put the projectedValue as lower than current value. limit 250 words for information" +
         "currentValue and projectedValue must be in double form with no dollar sign do not used nested JSON so you will only return currentValue, projectedValue, and information"
@@ -29,19 +29,20 @@ public class OpenRouter{
     JSONObject userPrompt = new JSONObject();
     userPrompt.put("role", "user");
     userPrompt.put("content",
-    "Analyze the stock " + data.getName() +
+    "Analyze the stock " + data.getName() + " at current price " + data.getValue()+
     ". The user's risk level is " + translate(data.getRiskLevel(),"risk") +
-    " and their investment timeframe is " + translate(data.getTimeFrame(),"timeframe") + "."
+    " and their investment timeframe is "+data.getTimeFrame()+"months" + "."
     );
     JSONArray messages = new JSONArray(); 
     messages.put(prompt);
     messages.put(userPrompt);
     JSONObject requestBody = new JSONObject();
-    requestBody.put("model", "openai/gpt-4o-mini");
+    requestBody.put("model", "openai/gpt-4.1-mini");
     requestBody.put("messages", messages);
     JSONObject responseFormat = new JSONObject();
     responseFormat.put("type", "json_object");
     requestBody.put("response_format", responseFormat);
+    
     text = requestBody.toString();
     }
     HttpClient client = HttpClient.newHttpClient();
@@ -51,12 +52,10 @@ public class OpenRouter{
     .POST(HttpRequest.BodyPublishers.ofString(text))
     .build();
     HttpResponse<String> response=client.send(request,HttpResponse.BodyHandlers.ofString());
-    System.out.println("OpenRouter status: " + response.statusCode());
-    System.out.println("OpenRouter response: " + response.body());
     JSONObject message = new JSONObject(response.body()).getJSONArray("choices").getJSONObject(0).getJSONObject("message");
     JSONObject json=new JSONObject(message.getString("content"));
     Reply reply=new Reply();
-    reply.setcurrentValue(json.getDouble("currentValue"));
+    reply.setcurrentValue(data.getValue());
     reply.setprojectedValue(json.getDouble("projectedValue"));
     reply.setInformation(json.getString("information"));
     reply.setResponseCode(0);
@@ -78,17 +77,6 @@ public class OpenRouter{
         }
         if (number==5){
           return "high";
-        }
-      }
-      else if (type.equals("timeframe")){
-        if (number==1){
-          return "long term only";
-        }
-        if (number==2){
-          return "medium term spanning 1-6 months";
-        }
-        if (number==3){
-          return "short term spanning 1 week-1 month";
         }
       }
       return"";
