@@ -16,7 +16,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import io.jsonwebtoken.JwtException;
 import org.springframework.transaction.annotation.Transactional;
     @RestController
-@CrossOrigin(origins = "http://localhost:8081")
+@CrossOrigin(origins = {"http://localhost:8081","https://ryanjiang578.github.io"})
 public class UserController {
     private final OpenRouter router;
     private final RetrieveValue retrieveValue;
